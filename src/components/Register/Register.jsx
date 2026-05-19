@@ -1,49 +1,20 @@
-import "./Register.css";
 import { useFormik } from "formik";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import * as YUP from "yup";
 import toast, { Toaster } from "react-hot-toast";
 import { useState } from "react";
+import { CircleLoader } from "react-spinners";
+import "./Register.css";
 export default function Register() {
-  let [apierror, setapierror] = useState("");
+  let [spinnerr, setspinnerr] = useState(false);
+  let [, setapierror] = useState("");
   let navigate = useNavigate();
-  // function validateName(value) {
-  //   if (!value || value.trim() === "") return "Name is required";
-  //   if (value.trim().length < 3) return "Name must be at least 3 characters";
-  //   if (!/^[A-Za-z\s'-]+$/.test(value))
-  //     return "Name can only contain letters, spaces, apostrophes and hyphens";
-  //   return undefined;
-  // }
-  // function validateEmail(value) {
-  //   if (!value || value.trim() === "") return "Email is required";
-  //   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  //   if (!re.test(value)) return "Enter a valid email address";
-  //   return undefined;
-  // }
-  // //testing
 
-  // function validatePassword(value) {
-  //   if (!value) return "Password is required";
-  //   if (value.length < 6) return "Password must be at least 6 characters";
-  //   return undefined;
-  // }
-
-  // function validateRePassword(value, password) {
-  //   if (!value) return "Please re-type your password";
-  //   if (value !== password) return "Passwords do not match";
-  //   return undefined;
-  // }
-
-  // function validatePhone(value) {
-  //   if (!value || value.trim() === "") return "Phone is required";
-  //   const digits = value.replace(/\D/g, "");
-  //   if (digits.length < 10) return "Enter a valid phone number";
-  //   return undefined;
-  // }
   async function handlesubmit(x) {
-    // console.log("test");
+    setspinnerr(true);
+
     console.log(x);
     try {
       let req = await axios.post(
@@ -56,24 +27,19 @@ export default function Register() {
           phone: x.phone,
         },
       );
-      // .then((result) => {
-      // })
-      // .catch((err) => {
-      // });
+
       if (req.data.message == "success") {
         console.log("congrats");
         navigate("/Brands");
       }
     } catch (err) {
-      console.log(err.response);
-
-      console.log(err.response.data.message);
-      setapierror(err.response.data.message);
-      toast.error(apierror);
+      const message = err.response?.data?.message || "Something went wrong";
+      setapierror(message);
+      toast.error(message);
+      setspinnerr(false);
     }
   }
 
-  // validate with YUP
   let vali = YUP.object().shape({
     name: YUP.string("Name must be string")
       .min(3, "name is less than 3 characters")
@@ -89,8 +55,6 @@ export default function Register() {
       .required("repassword must be required"),
   });
 
-  // console.log(vali);
-
   let foooorm = useFormik({
     initialValues: {
       name: "",
@@ -100,29 +64,6 @@ export default function Register() {
       phone: "",
     },
     validationSchema: vali,
-
-    // validate: (values) => {
-    //   const errors = {};
-    //   const nameError = validateName(values.name);
-    //   if (nameError) errors.name = nameError;
-
-    //   const emailError = validateEmail(values.email);
-    //   if (emailError) errors.email = emailError;
-
-    //   const passwordError = validatePassword(values.password);
-    //   if (passwordError) errors.password = passwordError;
-
-    //   const rePasswordError = validateRePassword(
-    //     values.rePassword,
-    //     values.password,
-    //   );
-    //   if (rePasswordError) errors.rePassword = rePasswordError;
-
-    //   const phoneError = validatePhone(values.phone);
-    //   if (phoneError) errors.phone = phoneError;
-
-    //   return errors;
-    // },
     onSubmit: handlesubmit,
   });
   return (
@@ -136,6 +77,7 @@ export default function Register() {
               <form onSubmit={foooorm.handleSubmit} className="d-grid gap-3">
                 <div>
                   <Toaster />
+                  <CircleLoader id="spinner" loading={spinnerr} />
                 </div>
                 <input
                   type="text"
@@ -231,6 +173,9 @@ export default function Register() {
                   type="submit"
                   value="submit"
                 />
+                <Link className="btn btn-success" to={"../login"}>
+                  login{" "}
+                </Link>
               </form>
             </div>
           </div>

@@ -1,3 +1,7 @@
 .login {
   padding: 1rem;
 }
+#spinner {
+  margin: auto;
+  color: red;
+}

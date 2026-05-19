@@ -41,6 +41,10 @@ export default function Navbar() {
             <Link className="nav-link" to="/Register">
               Register
             </Link>
+
+            <Link className="nav-link" to="/login">
+              login
+            </Link>
             <Link className="nav-link" to="/Logout">
               Logout
             </Link>
