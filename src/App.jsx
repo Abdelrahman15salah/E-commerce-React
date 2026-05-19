@@ -19,6 +19,7 @@ import Cleaning from "./components/Categories/Cleaning/Cleaning";
 import Jeans from "./components/Categories/Clothes/Jeans/Jeans";
 import Shirts from "./components/Categories/Clothes/Shirts/Shirts";
 import Shoes from "./components/Categories/Clothes/Shoes/shoes";
+import { CounterProvider } from "./Context/appcontext";
 
 let Routing = createBrowserRouter([
   {
@@ -67,7 +68,9 @@ let Routing = createBrowserRouter([
 function App() {
   return (
     <>
-      <RouterProvider router={Routing} />
+      <CounterProvider>
+        <RouterProvider router={Routing} />
+      </CounterProvider>
     </>
   );
 }

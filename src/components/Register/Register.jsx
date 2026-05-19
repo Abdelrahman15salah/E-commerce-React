@@ -4,14 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 
 import * as YUP from "yup";
 import toast, { Toaster } from "react-hot-toast";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CircleLoader } from "react-spinners";
 import "./Register.css";
+import { countercontext } from "../../Context/appcontext";
 export default function Register() {
   let [spinnerr, setspinnerr] = useState(false);
   let [, setapierror] = useState("");
   let navigate = useNavigate();
-
+  let { token, setToken } = useContext(countercontext);
   async function handlesubmit(x) {
     setspinnerr(true);
 
@@ -30,6 +31,10 @@ export default function Register() {
 
       if (req.data.message == "success") {
         console.log("congrats");
+        console.log(req.data.token);
+        setToken(req.data.token);
+        // console.log(token);
+
         navigate("/Brands");
       }
     } catch (err) {
