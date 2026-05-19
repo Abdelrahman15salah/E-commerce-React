@@ -2,41 +2,43 @@ import "./Register.css";
 import { useFormik } from "formik";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+import * as YUP from "yup";
 export default function Register() {
   let navigate = useNavigate();
-  function validateName(value) {
-    if (!value || value.trim() === "") return "Name is required";
-    if (value.trim().length < 3) return "Name must be at least 3 characters";
-    if (!/^[A-Za-z\s'-]+$/.test(value))
-      return "Name can only contain letters, spaces, apostrophes and hyphens";
-    return undefined;
-  }
-  function validateEmail(value) {
-    if (!value || value.trim() === "") return "Email is required";
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!re.test(value)) return "Enter a valid email address";
-    return undefined;
-  }
-  //testing
+  // function validateName(value) {
+  //   if (!value || value.trim() === "") return "Name is required";
+  //   if (value.trim().length < 3) return "Name must be at least 3 characters";
+  //   if (!/^[A-Za-z\s'-]+$/.test(value))
+  //     return "Name can only contain letters, spaces, apostrophes and hyphens";
+  //   return undefined;
+  // }
+  // function validateEmail(value) {
+  //   if (!value || value.trim() === "") return "Email is required";
+  //   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  //   if (!re.test(value)) return "Enter a valid email address";
+  //   return undefined;
+  // }
+  // //testing
 
-  function validatePassword(value) {
-    if (!value) return "Password is required";
-    if (value.length < 6) return "Password must be at least 6 characters";
-    return undefined;
-  }
+  // function validatePassword(value) {
+  //   if (!value) return "Password is required";
+  //   if (value.length < 6) return "Password must be at least 6 characters";
+  //   return undefined;
+  // }
 
-  function validateRePassword(value, password) {
-    if (!value) return "Please re-type your password";
-    if (value !== password) return "Passwords do not match";
-    return undefined;
-  }
+  // function validateRePassword(value, password) {
+  //   if (!value) return "Please re-type your password";
+  //   if (value !== password) return "Passwords do not match";
+  //   return undefined;
+  // }
 
-  function validatePhone(value) {
-    if (!value || value.trim() === "") return "Phone is required";
-    const digits = value.replace(/\D/g, "");
-    if (digits.length < 10) return "Enter a valid phone number";
-    return undefined;
-  }
+  // function validatePhone(value) {
+  //   if (!value || value.trim() === "") return "Phone is required";
+  //   const digits = value.replace(/\D/g, "");
+  //   if (digits.length < 10) return "Enter a valid phone number";
+  //   return undefined;
+  // }
   async function handlesubmit(x) {
     // console.log("test");
     console.log(x);
@@ -60,6 +62,25 @@ export default function Register() {
       console.error(err.response ?? err);
     }
   }
+
+  // validate with YUP
+  let vali = YUP.object().shape({
+    name: YUP.string("Name must be string")
+      .min(3, "name is less than 3 characters")
+      .max(15, "name is more than 15 characters")
+      .required("Name is required"),
+    email: YUP.string()
+      .email("must Enter a valid email")
+      .required("email is required"),
+    phone: YUP.string().required("phone is required"),
+    password: YUP.string().required("password must be required"),
+    rePassword: YUP.string()
+      .oneOf([YUP.ref("password")], "repassword doesnot match password")
+      .required("repassword must be required"),
+  });
+
+  // console.log(vali);
+
   let foooorm = useFormik({
     initialValues: {
       name: "",
@@ -68,28 +89,30 @@ export default function Register() {
       rePassword: "",
       phone: "",
     },
-    validate: (values) => {
-      const errors = {};
-      const nameError = validateName(values.name);
-      if (nameError) errors.name = nameError;
+    validationSchema: vali,
 
-      const emailError = validateEmail(values.email);
-      if (emailError) errors.email = emailError;
+    // validate: (values) => {
+    //   const errors = {};
+    //   const nameError = validateName(values.name);
+    //   if (nameError) errors.name = nameError;
 
-      const passwordError = validatePassword(values.password);
-      if (passwordError) errors.password = passwordError;
+    //   const emailError = validateEmail(values.email);
+    //   if (emailError) errors.email = emailError;
 
-      const rePasswordError = validateRePassword(
-        values.rePassword,
-        values.password,
-      );
-      if (rePasswordError) errors.rePassword = rePasswordError;
+    //   const passwordError = validatePassword(values.password);
+    //   if (passwordError) errors.password = passwordError;
 
-      const phoneError = validatePhone(values.phone);
-      if (phoneError) errors.phone = phoneError;
+    //   const rePasswordError = validateRePassword(
+    //     values.rePassword,
+    //     values.password,
+    //   );
+    //   if (rePasswordError) errors.rePassword = rePasswordError;
 
-      return errors;
-    },
+    //   const phoneError = validatePhone(values.phone);
+    //   if (phoneError) errors.phone = phoneError;
+
+    //   return errors;
+    // },
     onSubmit: handlesubmit,
   });
   return (
@@ -102,11 +125,6 @@ export default function Register() {
 
               <form onSubmit={foooorm.handleSubmit} className="d-grid gap-3">
                 <input
-                  className={`form-control ${
-                    foooorm.touched.name && foooorm.errors.name
-                      ? "is-invalid"
-                      : ""
-                  }`}
                   type="text"
                   name="name"
                   placeholder="username"
