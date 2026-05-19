@@ -4,7 +4,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import * as YUP from "yup";
+import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 export default function Register() {
+  let [apierror, setapierror] = useState("");
   let navigate = useNavigate();
   // function validateName(value) {
   //   if (!value || value.trim() === "") return "Name is required";
@@ -53,13 +56,20 @@ export default function Register() {
           phone: x.phone,
         },
       );
-      console.log(req);
+      // .then((result) => {
+      // })
+      // .catch((err) => {
+      // });
       if (req.data.message == "success") {
         console.log("congrats");
         navigate("/Brands");
       }
     } catch (err) {
-      console.error(err.response ?? err);
+      console.log(err.response);
+
+      console.log(err.response.data.message);
+      setapierror(err.response.data.message);
+      toast.error(apierror);
     }
   }
 
@@ -124,6 +134,9 @@ export default function Register() {
               <h2 className="card-title h3 fw-bold mb-4">Register Component</h2>
 
               <form onSubmit={foooorm.handleSubmit} className="d-grid gap-3">
+                <div>
+                  <Toaster />
+                </div>
                 <input
                   type="text"
                   name="name"
