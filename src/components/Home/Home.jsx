@@ -4,18 +4,15 @@ import axios from "axios";
 import { useState } from "react";
 export default function Home() {
   let [products, setproducts] = useState([]);
-  async function Getproducts() {
-    let req = await axios.get(
-      "https://ecommerce.routemisr.com/api/v1/products",
-    );
-    console.log(req.data.data);
-    setproducts(req.data.data);
-  }
   useEffect(() => {
-    async function run() {
-      await Getproducts();
+    async function Getproducts() {
+      let req = await axios.get(
+        "https://ecommerce.routemisr.com/api/v1/products",
+      );
+      // console.log(req.data.data);
+      setproducts(req.data.data);
     }
-    run();
+    Getproducts();
   }, []);
   return (
     <section className="home container py-5">
