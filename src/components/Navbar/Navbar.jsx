@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { countercontext } from "../../Context/appcontext";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+  let { token, setToken } = useContext(countercontext);
+  let navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/Login");
+  }
+
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-3">
       <div className="container-fluid">
@@ -38,16 +50,26 @@ export default function Navbar() {
             <Link className="nav-link" to="/Brands">
               Brands
             </Link>
-            <Link className="nav-link" to="/Register">
-              Register
-            </Link>
-
-            <Link className="nav-link" to="/login">
-              login
-            </Link>
-            <Link className="nav-link" to="/Logout">
-              Logout
-            </Link>
+            {!token ? (
+              <>
+                <Link className="nav-link" to="/Register">
+                  Register
+                </Link>
+                <Link className="nav-link" to="/login">
+                  login
+                </Link>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  className="nav-link border-0 bg-transparent text-start"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

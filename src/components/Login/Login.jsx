@@ -4,13 +4,15 @@ import { Link, useNavigate } from "react-router-dom";
 
 import * as YUP from "yup";
 import toast, { Toaster } from "react-hot-toast";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CircleLoader } from "react-spinners";
 import "./Login.css";
+import { countercontext } from "../../Context/appcontext";
 export default function Login() {
   let [spinnerr, setspinnerr] = useState(false);
   let [, setapierror] = useState("");
   let navigate = useNavigate();
+  let { setToken } = useContext(countercontext);
 
   async function handlesubmit(x) {
     setspinnerr(true);
@@ -27,6 +29,9 @@ export default function Login() {
 
       if (req.data.message == "success") {
         console.log("congrats");
+        localStorage.setItem("token", req.data.token);
+        setToken(req.data.token);
+
         navigate("/Brands");
       }
     } catch (err) {

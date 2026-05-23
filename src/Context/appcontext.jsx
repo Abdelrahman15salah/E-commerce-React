@@ -5,7 +5,7 @@ export let countercontext = createContext(0);
 export function CounterProvider(props) {
   let [index, setindex] = useState(0);
   let [username, setusername] = useState("sayed");
-  let [token, setToken] = useState("");
+  let [token, setToken] = useState(() => localStorage.getItem("token") || "");
 
   return (
     <>

@@ -33,6 +33,7 @@ export default function Register() {
         console.log("congrats");
         console.log(req.data.token);
         setToken(req.data.token);
+        localStorage.setItem("token", req.data.token);
         // console.log(token);
 
         navigate("/Brands");

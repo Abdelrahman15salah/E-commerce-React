@@ -10,7 +10,6 @@ import Cart from "./components/Cart/Cart";
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
 import NotFound from "./components/NotFound/NotFound";
-import Logout from "./components/Logout/Logout";
 import { RouterProvider } from "react-router-dom";
 import Electronics from "./components/Categories/Electronics/Electronics";
 import Kitchen from "./components/Categories/Kitchen/Kitchen";
@@ -57,10 +56,6 @@ let Routing = createBrowserRouter([
       { path: "Cart", element: <Cart /> },
       { path: "Login", element: <Login /> },
       { path: "Register", element: <Register /> },
-      {
-        path: "Logout",
-        element: <Logout />,
-      },
     ],
   },
   { path: "*", element: <NotFound /> },
